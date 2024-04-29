@@ -1,0 +1,92 @@
+nav {
+  display: flex;
+  align-items: center; /* Center items vertically */
+  justify-content: space-between; /* Space between major sections */
+  padding: 1rem;
+  background-color: #f0f0f0;
+  flex-wrap: wrap; /* Allows items to wrap on smaller screens */
+}
+
+.search-bar {
+  flex-grow: 0; /* Ensures that search bar doesn't grow to fill space */
+  margin-right: auto; /* Pushes everything else to the right */
+}
+
+.nav-links {
+  display: flex;
+  justify-content: center; /* Center align links */
+  flex-grow: 1; /* Allows this section to grow to fill space as needed */
+  gap: 10px; /* Space between each link */
+}
+
+nav a {
+  padding: 10px 20px;
+  margin: 5px; /* Adjust margin for better spacing */
+  border: 2px solid #ccc;
+  border-radius: 8px;
+  text-decoration: none;
+  color: black;
+  background-color: white;
+  transition: background-color 0.3s, color 0.3s;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+nav a:hover {
+  background-color: #1E90FF;
+  color: white;
+  border-color: #1E90FF;
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+  nav a {
+    padding: 8px 16px;
+    margin: 5px;
+  }
+  .nav-links {
+    justify-content: space-around; /* Ensure links are spread out on smaller screens */
+  }
+
+  .page-container {
+    padding: 20px;
+}
+
+.page-container img {
+    margin-right: 10px;
+    vertical-align: middle;
+}
+
+.page-container li {
+    list-style-type: none;
+    margin-bottom: 20px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #ccc;
+}
+
+.page-container ul {
+    padding: 0;
+}
+.product-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+}
+
+.product {
+  width: 200px;  
+  margin: 10px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  text-align: center;
+}
+
+.product-grid .product img {
+  width: 100%;   /* Ensure the image covers the full width of the container */
+  height: 200px; /* Fix the height to ensure uniformity */
+  object-fit: cover; /* Ensures the image covers the frame without distorting the aspect ratio */
+  border-radius: 10px; /* Optional: adds rounded corners to your images */
+}
+
+
+}

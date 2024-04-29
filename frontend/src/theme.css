@@ -1,0 +1,24 @@
+/* Light Theme */
+.light-theme {
+    --nav-bg-color: #ffff8d; /* Light yellow for NavBar */
+    --link-box-color: #82b1ff; /* Light blue for link boxes */
+    --text-color: #000000; /* Black text for light mode */
+    --primary-bg-color: #f0f0f0; /* Light grey for page background */
+}
+
+/* Dark Theme */
+.dark-theme {
+    --nav-bg-color: #333333; /* Dark gray for NavBar */
+    --link-box-color: #0d47a1; /* Dark blue for link boxes */
+    --text-color: #ffffff; /* White text for dark mode */
+    --primary-bg-color: #212121; /* Darker grey for page background */
+}
+
+.nav-bar, .nav-links a {
+    background-color: var(--nav-bg-color);
+}
+
+.nav-links a {
+    background-color: var(--link-box-color);
+    color: var(--text-color);
+}
