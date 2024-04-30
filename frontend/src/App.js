@@ -7,15 +7,15 @@ import AboutPage from './components/about';
 import CartPage from './components/cart';
 import NavBar from './components/navbar';
 import CheckoutPage from './components/checkout';
-import SearchResults from './components/searchcontext'; // Import the new SearchResults component
+import SearchResults from './components/searchcontext';
+import AdminPage from './components/adminscreen'; // Import the AdminPage component
 import './App.css';
 import './theme.css';
 import { CartProvider } from './components/cartcontext';
 import ProductDetail from './components/productdetail';
 
-
 const App = () => {
-  const [theme, setTheme] = useState('light-theme'); // State for theme
+  const [theme, setTheme] = useState('light-theme');
 
   const toggleTheme = () => {
     setTheme(theme === 'light-theme' ? 'dark-theme' : 'light-theme');
@@ -35,6 +35,7 @@ const App = () => {
             <Route path="/cart" element={<CartPage />} />
             <Route path="/checkout" element={<CheckoutPage />} />
             <Route path="/search/:searchTerm" element={<SearchResults />} />
+            <Route path="/admin" element={<AdminPage />} /> // Route for AdminPage
           </Routes>
         </div>
       </Router>

@@ -1,15 +1,16 @@
 import React, { useContext, useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate for navigation
-import { CartContext } from './cartcontext';  // Ensure the path is correct
-import Carousel from 'react-multi-carousel'; // You might need to install this package
-import 'react-multi-carousel/lib/styles.css'; // Default styles
+import { useNavigate } from 'react-router-dom';
+import { CartContext } from './cartcontext';
+import Carousel from 'react-multi-carousel';
+import 'react-multi-carousel/lib/styles.css';
 
 const HomePage = () => {
     const { addToCart } = useContext(CartContext);
     const [products, setProducts] = useState([]);
     const [popularProducts, setPopularProducts] = useState([]);
     const [onSaleProducts, setOnSaleProducts] = useState([]);
-    const navigate = useNavigate(); // Use navigate for routing
+    const [hoveredProductId, setHoveredProductId] = useState(null);
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchProducts = async () => {
@@ -37,49 +38,76 @@ const HomePage = () => {
     };
 
     const imageStyle = {
-        width: '100%', 
-        height: '200px', 
-        objectFit: 'cover', 
+        width: 'auto',
+        maxHeight: '200px',
+        objectFit: 'contain',
         borderRadius: '10px'
     };
 
+    const productStyle = (isHovered) => ({
+        margin: '10px',
+        padding: '10px',
+        border: '1px solid #ccc',
+        borderRadius: '8px',
+        textAlign: 'center',
+        cursor: 'pointer',
+        transition: 'transform 0.3s ease-in-out',
+        transform: isHovered ? 'translateY(-5px)' : 'none',
+        overflow: 'hidden',
+        backgroundColor: 'white'  // Set the background color to white for the clickable area
+    });
+
     const handleProductClick = (id) => {
-        navigate(`/products/${id}`); // Navigate to product detail page
+        navigate(`/products/${id}`);
+    };
+
+    const pageStyles = {
+        background: 'linear-gradient(to right, #e0eafc, #cfdef3)',
+        padding: '20px',
+        minHeight: 'calc(100vh - 60px)', // Adjust if your nav bar height is different
     };
 
     return (
-        <div>
-            <div className="banner">Welcome to SpongeBob Plushie World!</div>
-            <h2>Most Popular Products</h2>
-            <Carousel responsive={responsive}>
-                {popularProducts.map(product => (
-                    <div key={product._id} className="product" style={{ margin: '10px', padding: '10px', border: '1px solid #ccc', borderRadius: '8px', textAlign: 'center' }}>
-                        <img src={product.Images} alt={product.Name} style={imageStyle} onClick={() => handleProductClick(product._id)} />
-                        <h3>{product.Name}</h3>
-                        <p>${product.Price.toFixed(2)}</p>
-                        <button onClick={() => addToCart({...product, id: product._id, price: product.Price, imageUrl: product.Images})}>Add to Cart</button>
-                    </div>
-                ))}
-            </Carousel>
-            <h2>On Sale Products</h2>
-            <Carousel responsive={responsive}>
-                {onSaleProducts.map(product => (
-                    <div key={product._id} className="product" style={{ margin: '10px', padding: '10px', border: '1px solid #ccc', borderRadius: '8px', textAlign: 'center' }}>
-                        <img src={product.Images} alt={product.Name} style={imageStyle} onClick={() => handleProductClick(product._id)} />
-                        <h3>{product.Name}</h3>
-                        <p>
-                            {product.salePrice && product.salePrice < product.Price ? (
-                                <>
-                                    <span style={{ textDecoration: 'line-through' }}>${product.Price.toFixed(2)}</span>
-                                    <span style={{ color: 'red', marginLeft: '10px' }}>${product.salePrice.toFixed(2)}</span>
-                                </>
-                            ) : `$${product.Price.toFixed(2)}`}
-                        </p>
-                        <button onClick={() => addToCart({...product, id: product._id, price: (product.salePrice || product.Price), imageUrl: product.Images})}>Add to Cart</button>
-                    </div>
-                ))}
-            </Carousel>
-        </div>
+        <>
+            {/* Navigation Bar should go here, it's assumed to be another component */}
+            <div style={pageStyles}>
+                <h2>Most Popular Products</h2>
+                <Carousel responsive={responsive}>
+                    {popularProducts.map(product => (
+                        <div key={product._id} style={productStyle(product._id === hoveredProductId)}
+                             onMouseEnter={() => setHoveredProductId(product._id)}
+                             onMouseLeave={() => setHoveredProductId(null)}
+                             onClick={() => handleProductClick(product._id)}>
+                            <img src={product.Images} alt={product.Name} style={imageStyle} />
+                            <h3>{product.Name}</h3>
+                            <p>${product.Price.toFixed(2)}</p>
+                            <button onClick={() => addToCart({...product, id: product._id, price: product.Price, imageUrl: product.Images})}>Add to Cart</button>
+                        </div>
+                    ))}
+                </Carousel>
+                <h2>On Sale Products</h2>
+                <Carousel responsive={responsive}>
+                    {onSaleProducts.map(product => (
+                        <div key={product._id} style={productStyle(product._id === hoveredProductId)}
+                             onMouseEnter={() => setHoveredProductId(product._id)}
+                             onMouseLeave={() => setHoveredProductId(null)}
+                             onClick={() => handleProductClick(product._id)}>
+                            <img src={product.Images} alt={product.Name} style={imageStyle} />
+                            <h3>{product.Name}</h3>
+                            <p>
+                                {product.salePrice && product.salePrice < product.Price ? (
+                                    <>
+                                        <span style={{ textDecoration: 'line-through' }}>${product.Price.toFixed(2)}</span>
+                                        <span style={{ color: 'red', marginLeft: '10px' }}>${product.salePrice.toFixed(2)}</span>
+                                    </>
+                                ) : `$${product.Price.toFixed(2)}`}
+                            </p>
+                            <button onClick={() => addToCart({...product, id: product._id, price: (product.salePrice || product.Price), imageUrl: product.Images})}>Add to Cart</button>
+                        </div>
+                    ))}
+                </Carousel>
+            </div>
+        </>
     );
 };
 

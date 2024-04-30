@@ -68,37 +68,19 @@ app.get('/products', async (req, res) => {
     }
 });
 
+
 // Search for products by name
-app.get('/search/:query', async (req, res) => {
+app.get('/products/search/:query', async (req, res) => {
     try {
-        const regex = new RegExp(req.params.query, 'i'); // 'i' for case insensitive
-        const products = await Product.find({ name: regex });
-        res.json(products);
-    } catch (error) {
-        console.error("Error fetching search results:", error);
-        res.status(500).send("Error processing search query");
-    }
-});
-
-app.get('/search/:term', async (req, res) => {
-    const searchQuery = req.params.term; // Ensure this variable is defined here
-    console.log("Search query received:", searchQuery); // Log the search query
-
-    try {
-        const results = await Product.find({
-            Name: { $regex: new RegExp(searchQuery, "i") }
-        });
-        console.log("Database search results:", results); // Log the results from the database
-
-        if (results.length === 0) {
-            return res.status(404).json({ message: "No results found." });
-        }
+        const query = req.params.query;
+        const results = await Product.find({ name: { $regex: new RegExp(query, 'i') } });
         res.json(results);
     } catch (error) {
-        console.error("Error searching the database:", error); // Log any errors
-        res.status(500).send(error.message);
+        console.error('Error searching products:', error);
+        res.status(500).json({ error: 'Internal server error' });
     }
 });
+
 
 
 
@@ -125,6 +107,32 @@ app.patch('/products/:id', async (req, res) => {
 
 // Delete a product by ID
 app.delete('/products/:id', async (req, res) => {
+    try {
+        const product = await Product.findByIdAndDelete(req.params.id);
+        if (!product) {
+            return res.status(404).send();
+        }
+        res.send(product);
+    } catch (error) {
+        res.status(500).send(error);
+    }
+});
+
+
+// Create a new product
+app.post('/admin/products', async (req, res) => {
+    try {
+        const product = new Product(req.body);
+        await product.save();
+        res.status(201).send(product);
+    } catch (error) {
+        console.error(error); 
+        res.status(400).send(error);
+    }
+});
+
+// Delete a product by ID
+app.delete('/admin/products/:id', async (req, res) => {
     try {
         const product = await Product.findByIdAndDelete(req.params.id);
         if (!product) {

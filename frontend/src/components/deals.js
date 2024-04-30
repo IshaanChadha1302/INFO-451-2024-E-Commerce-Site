@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate for navigation
+import { useNavigate } from 'react-router-dom';
 import { CartContext } from './cartcontext'; // Ensure the path is correct
 
 const DealsPage = () => {
     const [onSaleProducts, setOnSaleProducts] = useState([]);
+    const [hoveredProductId, setHoveredProductId] = useState(null);
     const navigate = useNavigate();
-    const { addToCart } = useContext(CartContext); // Use CartContext to add items to cart
+    const { addToCart } = useContext(CartContext);
 
     useEffect(() => {
         const fetchOnSaleProducts = async () => {
@@ -25,17 +26,34 @@ const DealsPage = () => {
     }, []);
 
     const handleProductClick = (id) => {
-        navigate(`/products/${id}`); // Navigate to product detail page
+        navigate(`/products/${id}`);
     };
 
+    const productStyle = (isHovered) => ({
+        cursor: 'pointer',
+        backgroundColor: 'white', // Set the background color of the product card to white
+        padding: '10px',
+        margin: '10px',
+        border: '1px solid #ccc',
+        borderRadius: '8px',
+        overflow: 'hidden',
+        transform: isHovered ? 'translateY(-5px)' : 'none',
+        transition: 'transform 0.3s ease-in-out',
+        boxShadow: isHovered ? '0 8px 16px rgba(0,0,0,0.2)' : 'none'
+    });
+
     return (
-        <div className="page-container">
+        <div className="page-container" style={{ background: 'linear-gradient(to right, #e0eafc, #cfdef3)', minHeight: 'calc(100vh - 60px)' }}>
             <h1>Deals</h1>
-            <div className="product-grid">
+            <div className="product-grid" style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center' }}>
                 {onSaleProducts.length > 0 ? (
                     onSaleProducts.map(product => (
-                        <div key={product._id} className="product">
-                            <img src={product.Images} alt={product.Name} style={{ width: '200px', height: '200px', objectFit: 'cover' }} onClick={() => handleProductClick(product._id)} />
+                        <div key={product._id}
+                             style={productStyle(product._id === hoveredProductId)}
+                             onMouseEnter={() => setHoveredProductId(product._id)}
+                             onMouseLeave={() => setHoveredProductId(null)}
+                             onClick={() => handleProductClick(product._id)}>
+                            <img src={product.Images} alt={product.Name} style={{ width: '200px', height: '200px', objectFit: 'cover' }} />
                             <h3>{product.Name}</h3>
                             <p>
                                 {product.salePrice && product.salePrice < product.Price ? (
