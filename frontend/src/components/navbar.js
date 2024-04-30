@@ -1,17 +1,23 @@
+// NavBar.js
+
 import React, { useContext, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { CartContext } from './cartcontext';
+import { CartContext } from './cartcontext'; // Ensure path is correct
 
 const NavBar = ({ toggleTheme }) => {
     const { cartItems } = useContext(CartContext);
     const navigate = useNavigate();
     const [searchTerm, setSearchTerm] = useState('');
 
+    // Calculate total number of items in the cart
     const totalItems = cartItems.reduce((total, item) => total + item.quantity, 0);
 
+    // Handle search form submission
     const handleSearch = (event) => {
         event.preventDefault();
-        navigate(`/search/${searchTerm}`);
+        if (searchTerm.trim()) {
+            navigate(`/search/${searchTerm}`); // Navigate to search results page
+        }
     };
 
     return (

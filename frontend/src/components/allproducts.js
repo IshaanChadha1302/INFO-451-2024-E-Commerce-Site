@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate
 
 const AllProductsPage = () => {
     const [products, setProducts] = useState([]);
+    const navigate = useNavigate(); // Initialize navigate function
 
     useEffect(() => {
         const fetchProducts = async () => {
@@ -19,15 +21,29 @@ const AllProductsPage = () => {
         fetchProducts();
     }, []);
 
+    // Function to navigate to ProductDetail page
+    const handleProductClick = (id) => {
+        navigate(`/products/${id}`);
+    };
+
     return (
         <div className="page-container">
             <h1>All Products</h1>
             <div className="product-grid">
                 {products.map(product => (
                     <div key={product._id} className="product">
-                        <img src={product.Images} alt={product.Name} style={{ width: '200px', height: '200px', objectFit: 'cover' }} />
+                        <img src={product.Images} alt={product.Name} style={{ width: '200px', height: '200px', objectFit: 'cover' }}
+                            onClick={() => handleProductClick(product._id)} // Make image clickable
+                        />
                         <h3>{product.Name}</h3>
-                        <p>${product.Price ? Number(product.Price).toFixed(2) : "0.00"}</p>
+                        {product.onSale && product.salePrice ? (
+                            <p>
+                                <span style={{ textDecoration: 'line-through' }}>${product.Price.toFixed(2)}</span>
+                                <span style={{ color: 'red', marginLeft: '10px' }}>${product.salePrice.toFixed(2)}</span>
+                            </p>
+                        ) : (
+                            <p>${product.Price.toFixed(2)}</p>
+                        )}
                     </div>
                 ))}
             </div>

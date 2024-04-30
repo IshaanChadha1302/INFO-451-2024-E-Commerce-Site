@@ -13,6 +13,7 @@ import './theme.css';
 import { CartProvider } from './components/cartcontext';
 import ProductDetail from './components/productdetail';
 
+
 const App = () => {
   const [theme, setTheme] = useState('light-theme'); // State for theme
 
@@ -33,7 +34,7 @@ const App = () => {
             <Route path="/about" element={<AboutPage />} />
             <Route path="/cart" element={<CartPage />} />
             <Route path="/checkout" element={<CheckoutPage />} />
-            <Route path="/search/:searchTerm" element={<SearchResults />} /> {/* Add this route for search results */}
+            <Route path="/search/:searchTerm" element={<SearchResults />} />
           </Routes>
         </div>
       </Router>

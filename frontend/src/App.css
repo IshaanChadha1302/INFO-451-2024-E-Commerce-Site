@@ -27,7 +27,7 @@ nav a {
   text-decoration: none;
   color: black;
   background-color: white;
-  transition: background-color 0.3s, color 0.3s;
+  transition: background-color 0.3s, color 0.3s, box-shadow 0.3s;
   box-shadow: 0 2px 5px rgba(0,0,0,0.2);
 }
 
@@ -46,26 +46,28 @@ nav a:hover {
   .nav-links {
     justify-content: space-around; /* Ensure links are spread out on smaller screens */
   }
+}
 
-  .page-container {
-    padding: 20px;
+.page-container {
+  padding: 20px;
 }
 
 .page-container img {
-    margin-right: 10px;
-    vertical-align: middle;
+  margin-right: 10px;
+  vertical-align: middle;
 }
 
 .page-container li {
-    list-style-type: none;
-    margin-bottom: 20px;
-    padding-bottom: 20px;
-    border-bottom: 1px solid #ccc;
+  list-style-type: none;
+  margin-bottom: 20px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #ccc;
 }
 
 .page-container ul {
-    padding: 0;
+  padding: 0;
 }
+
 .product-grid {
   display: flex;
   flex-wrap: wrap;
@@ -79,14 +81,18 @@ nav a:hover {
   border: 1px solid #ccc;
   border-radius: 8px;
   text-align: center;
+  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out; /* Add transitions for hover effects */
+  cursor: pointer; /* Indicates clickable items */
+}
+
+.product:hover {
+  transform: scale(1.05); /* Enlarges the product box */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Adds shadow for depth effect */
 }
 
 .product-grid .product img {
   width: 100%;   /* Ensure the image covers the full width of the container */
   height: 200px; /* Fix the height to ensure uniformity */
   object-fit: cover; /* Ensures the image covers the frame without distorting the aspect ratio */
-  border-radius: 10px; /* Optional: adds rounded corners to your images */
-}
-
-
+  border-radius: 10px; /* Adds rounded corners to your images */
 }

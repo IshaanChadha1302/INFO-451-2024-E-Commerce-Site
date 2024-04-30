@@ -31,7 +31,7 @@ const ProductDetail = () => {
         addToCart({
             ...product,
             id: product._id,
-            price: Number(product.Price), // Ensure the price is a number if it's stored as a string in database
+            price: product.onSale ? product.salePrice : product.Price, // Use sale price if on sale
             imageUrl: product.Images
         });
     };
@@ -46,9 +46,13 @@ const ProductDetail = () => {
             <img src={product.Images} alt={product.Name} style={{ width: '300px', height: '300px', objectFit: 'cover' }} />
             <h2>{product.Name}</h2>
             <p>{product.Description}</p>
-            <p>Price: ${product.Price.toFixed(2)}</p>
+            <p>Price: {product.onSale && product.salePrice ? (
+                <>
+                    <span style={{ textDecoration: 'line-through' }}>${product.Price.toFixed(2)}</span>
+                    <span style={{ color: 'red', marginLeft: '10px' }}>${product.salePrice.toFixed(2)}</span>
+                </>
+            ) : `$${product.Price.toFixed(2)}`}</p>
             <button onClick={handleAddToCart}>Add to Cart</button>
-            <button onClick={handleAddToCartAndCheckout}>Checkout</button>
         </div>
     );
 };

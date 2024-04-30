@@ -23,6 +23,7 @@ const productSchema = new mongoose.Schema({
     stocked: { type: Boolean, required: true },
     popularity: { type: Number, default: 0 },
     onSale: { type: Boolean, default: false },
+    salePrice: { type: Number, required: function() { return this.onSale; } }
 });
 
 const Product = mongoose.model('Product', productSchema);
@@ -33,13 +34,12 @@ app.use(bodyParser.json());
 
 // Create a new product
 app.post('/products', async (req, res) => {
-    console.log(req.body); // Log the incoming request data
     try {
         const product = new Product(req.body);
         await product.save();
         res.status(201).send(product);
     } catch (error) {
-        console.error(error); // Log the error 
+        console.error(error); 
         res.status(400).send(error);
     }
 });
@@ -60,9 +60,7 @@ app.get('/products/:id', async (req, res) => {
 // Get all products
 app.get('/products', async (req, res) => {
     try {
-        console.log("Fetching all products...");
         const products = await Product.find();
-        console.log("Products fetched:", products);
         res.send(products);
     } catch (error) {
         console.error("Error fetching products:", error);
@@ -71,19 +69,7 @@ app.get('/products', async (req, res) => {
 });
 
 // Search for products by name
-app.get('/api/search/:query', async (req, res) => {
-    try {
-        const { query } = req.params;
-        // Using a regex to make the search case-insensitive and partial match
-        const products = await Product.find({ name: new RegExp(query, 'i') });
-        res.json(products);
-    } catch (error) {
-        console.error('Search error:', error);
-        res.status(500).send('Error processing search request');
-    }
-});
-
-app.get('/api/search/:query', async (req, res) => {
+app.get('/search/:query', async (req, res) => {
     try {
         const regex = new RegExp(req.params.query, 'i'); // 'i' for case insensitive
         const products = await Product.find({ name: regex });
@@ -93,6 +79,28 @@ app.get('/api/search/:query', async (req, res) => {
         res.status(500).send("Error processing search query");
     }
 });
+
+app.get('/search/:term', async (req, res) => {
+    const searchQuery = req.params.term; // Ensure this variable is defined here
+    console.log("Search query received:", searchQuery); // Log the search query
+
+    try {
+        const results = await Product.find({
+            Name: { $regex: new RegExp(searchQuery, "i") }
+        });
+        console.log("Database search results:", results); // Log the results from the database
+
+        if (results.length === 0) {
+            return res.status(404).json({ message: "No results found." });
+        }
+        res.json(results);
+    } catch (error) {
+        console.error("Error searching the database:", error); // Log any errors
+        res.status(500).send(error.message);
+    }
+});
+
+
 
 // Update a product by id
 app.patch('/products/:id', async (req, res) => {

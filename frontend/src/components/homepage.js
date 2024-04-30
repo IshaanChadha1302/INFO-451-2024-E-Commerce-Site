@@ -67,8 +67,15 @@ const HomePage = () => {
                     <div key={product._id} className="product" style={{ margin: '10px', padding: '10px', border: '1px solid #ccc', borderRadius: '8px', textAlign: 'center' }}>
                         <img src={product.Images} alt={product.Name} style={imageStyle} onClick={() => handleProductClick(product._id)} />
                         <h3>{product.Name}</h3>
-                        <p>${product.Price.toFixed(2)}</p>
-                        <button onClick={() => addToCart({...product, id: product._id, price: product.Price, imageUrl: product.Images})}>Add to Cart</button>
+                        <p>
+                            {product.salePrice && product.salePrice < product.Price ? (
+                                <>
+                                    <span style={{ textDecoration: 'line-through' }}>${product.Price.toFixed(2)}</span>
+                                    <span style={{ color: 'red', marginLeft: '10px' }}>${product.salePrice.toFixed(2)}</span>
+                                </>
+                            ) : `$${product.Price.toFixed(2)}`}
+                        </p>
+                        <button onClick={() => addToCart({...product, id: product._id, price: (product.salePrice || product.Price), imageUrl: product.Images})}>Add to Cart</button>
                     </div>
                 ))}
             </Carousel>
